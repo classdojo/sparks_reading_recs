@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create New Profile - Sparky's Reading Recs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="new-user-page-body">
+    <header class="profile-select-header">
+        <a href="{{ url_for('profile_select_page') }}" class="recs-back-button">
+            &#x2190; <!-- Left arrow HTML entity -->
+        </a>
+        <h1>Create New Profile</h1>
+    </header>
+    <div class="main-content new-user-container">
+        <h2>Enter New Profile Details</h2>
+        
+        {% if error %}
+            <p class="error-message">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('new_user_page') }}" class="new-user-form">
+            <div class="form-group">
+                <label for="profile_name">Profile Name:</label>
+                <input type="text" id="profile_name" name="profile_name" required class="profile-name-input">
+            </div>
+            <button type="submit" class="button create-profile-submit">Create Profile</button>
+        </form>
+
+        <a href="{{ url_for('profile_select_page') }}" class="button back-button-alt">Back to Profile Selection</a>
+    </div>
+</body>
+</html> 

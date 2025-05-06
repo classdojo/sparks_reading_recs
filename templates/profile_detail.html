@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ profile.name }}'s Profile - Sparky's Reading Recs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="profile-detail-page-body">
+    <header class="profile-detail-header">
+        <a href="{{ url_for('profile_select_page') }}" class="recs-back-button">
+            &#x2190; <!-- Left arrow HTML entity -->
+        </a>
+        <h1>{{ profile.name }}'s Reading Log</h1>
+    </header>
+
+    <div class="main-content profile-detail-container">
+        
+        <div class="add-book-section">
+            <h2>Log a New Book</h2>
+            <form method="POST" action="{{ url_for('profile_detail_page', profile_id=profile.id) }}" class="book-search-form">
+                <input type="text" name="book_search_query" placeholder="Search for a book title..." class="book-search-input">
+                <button type="submit" class="button search-book-button">Search Books</button>
+                <a href="{{ url_for('recommendations_page', profile_id=profile.id) }}" class="button recommendations-link-button" title="Get Personalized Recommendations">Get Recommendations</a>
+            </form>
+
+            {% if search_results %}
+                <div class="search-results-container">
+                    <h3>Search Results:</h3>
+                    {% if search_results|length > 0 %}
+                        <ul class="book-search-results-list">
+                            {% for book in search_results %}
+                                <li class="search-result-item">
+                                    <div class="search-result-info">
+                                        {% if book.thumbnail_url %}
+                                            <img src="{{ book.thumbnail_url }}" alt="Cover of {{ book.title }}" class="search-result-thumbnail">
+                                        {% endif %}
+                                        <div>
+                                            <span class="search-result-title">{{ book.title }}</span>
+                                            <span class="search-result-author">by {{ book.author }}</span>
+                                        </div>
+                                    </div>
+                                    <form method="POST" action="{{ url_for('add_book_to_profile', profile_id=profile.id) }}" class="add-book-form">
+                                        <input type="hidden" name="gbook_id" value="{{ book.gbook_id }}">
+                                        <input type="hidden" name="title" value="{{ book.title }}">
+                                        <input type="hidden" name="authors" value="{{ book.author }}">
+                                        <input type="hidden" name="thumbnail_url" value="{{ book.thumbnail_url if book.thumbnail_url else '' }}">
+                                        <button type="submit" class="button add-read-button">Add to Read</button>
+                                    </form>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% else %}
+                        <p>No books found for your search. Try different keywords.</p>
+                    {% endif %}
+                </div>
+            {% elif request.method == 'POST' and not search_results %}
+                 <p>Could not fetch search results. Please try again.</p>
+            {% endif %}
+        </div>
+
+        <hr class="section-divider">
+
+        <div class="read-books-section">
+            <h2>Books I've Read</h2>
+            {% if read_books %}
+                <ul class="read-books-list">
+                    {% for book in read_books %}
+                        <li class="read-book-item">
+                            {% if book.thumbnail_url %}
+                                <img src="{{ book.thumbnail_url }}" alt="Cover of {{ book.title }}" class="read-book-thumbnail">
+                            {% endif %}
+                            <div class="read-book-info">
+                                <span class="read-book-title">{{ book.title }}</span>
+                                <span class="read-book-author">by {{ book.authors }}</span>
+                                {% if book.read_date %}
+                                    <span class="read-book-date">Read on: {{ book.read_date }}</span>
+                                {% endif %}
+                                {# Add rating display later if implemented #}
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No books logged yet. Use the search above to add books you've read!</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html> 

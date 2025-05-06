@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if profile %}
+        <title>Recommendations for {{ profile.name }} - Sparky's Reading Recs</title>
+    {% else %}
+        <title>Recommendations - Sparky's Reading Recs</title>
+    {% endif %}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="recommendations-page-body">
+    <header class="recommendations-header">
+        {% if profile %}
+            <a href="{{ url_for('profile_detail_page', profile_id=profile.id) }}" class="recs-back-button">
+                &#x2190; <!-- Left arrow HTML entity -->
+            </a>
+            <h1>Recommendations for {{ profile.name }}</h1>
+        {% else %}
+             <a href="{{ url_for('profile_select_page') }}" class="recs-back-button">
+                &#x2190; <!-- Left arrow HTML entity -->
+            </a>
+            <h1>Reading Recommendations</h1>
+        {% endif %}
+    </header>
+    <div class="main-content recommendations-content">
+        <!-- Form removed -->
+        
+        <div class="recommendations-results">
+            {% if recommendations %}
+                <ul class="book-title-list">
+                    {% for rec in recommendations %}
+                        {% if rec.amazon_search_url %} {# It's a book recommendation #}
+                            <li class="book-title-item">
+                                <a href="{{ rec.amazon_search_url }}" target="_blank" class="book-amazon-link">{{ rec.title }}</a>
+                                <span class="book-author-recommendation">by {{ rec.author }}</span>
+                            </li>
+                        {% elif rec.message %} {# It's an info/error message #}
+                            <li class="info-message">{{ rec.message }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            {% else %}
+                 <p class="info-message">Could not fetch recommendations at this time. Please try again later.</p>
+            {% endif %}
+        </div>
+
+        {% if profile %}
+             <a href="{{ url_for('profile_detail_page', profile_id=profile.id) }}" class="button back-link">Back to {{profile.name}}'s Profile</a>
+        {% else %}
+             <a href="{{ url_for('profile_select_page') }}" class="button back-link">Back to Profile Selection</a>
+        {% endif %}
+    </div>
+</body>
+</html> 

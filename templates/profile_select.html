@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Profile - Sparky's Reading Recs</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body class="profile-select-page-body">
+    <div class="profile-select-header">
+        <a href="{{ url_for('home') }}" class="recs-back-button page-back-button">
+            &#x2190; <!-- Left arrow HTML entity -->
+        </a>
+        <!-- Title h1 removed -->
+    </div>
+    <div class="main-content profile-selection-container">
+        <div class="profile-actions-toolbar">
+            {% if profiles %}
+                <div class="profile-dropdown-container">
+                    <label for="profile-select-dropdown">Choose Profile:</label>
+                    <select id="profile-select-dropdown" name="profile_select_dropdown" class="profile-select-dropdown" onchange="navigateToProfile(this)">
+                        <option value="">Select a Profile</option>
+                        {% for profile in profiles %}
+                            <option value="{{ url_for('profile_detail_page', profile_id=profile.id) }}">{{ profile.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% else %}
+                <p class="no-profiles-message">No profiles yet. Create one!</p>
+            {% endif %}
+            <a href="{{ url_for('new_user_page') }}" class="button new-user-button" id="create-profile-main-button">Create New Profile</a>
+        </div>
+    </div>
+
+    <script>
+        function navigateToProfile(selectElement) {
+            const url = selectElement.value;
+            if (url) {
+                window.location.href = url;
+            }
+        }
+    </script>
+</body>
+</html> 
