@@ -4,7 +4,7 @@ import sqlite3 # For database operations
 import datetime # For read_date
 
 app = Flask(__name__)
-DATABASE = 'gemini/sparky_recs.db' # Database file path
+DATABASE = 'sparky_recs.db' # Database file path
 
 def get_db():
     """Connects to the specific database."""
